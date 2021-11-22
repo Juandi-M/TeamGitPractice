@@ -1,2 +1,2 @@
 # TeamGitPractice
-Practice for basic demo for Accenture cloud team
+Basic demo for Accenture cloud team

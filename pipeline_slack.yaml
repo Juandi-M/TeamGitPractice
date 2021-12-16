@@ -1,16 +1,52 @@
+resource_types:
+- name: slack-alert
+  type: docker-image
+  source:
+    repository: arbourd/concourse-slack-alert-resource
+
 resources:
-- name: Pipeline_git_repo
+- name: pipeline_git_repo
   type: git
   icon: github
   source:
-    uri: git@github.com:Juandi-M/TeamGitPractice.git
-    branch: master
-    private_key: {{private_key:}}
+    uri: https://github.com/Juandi-M/TeamGitPractice.git
+    branch: main
+    username: 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
+    password: x-oauth-basic
+    
+- name: slac-notify
+  type: slack-alert
+  source:
+    url: https://hooks.slack.com/services/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
+
 
 jobs:
-- name: clone-git-pipeline
+# -- 1st job for cloning and notifying--
+- name: clone_and_notify
   public: true
   plan:
-    - get: Pipeline_git_repo
+    - get: pipeline_git_repo
       trigger: true
     
+    # Yello Message
+    - put: slac-notify
+      params:
+        alert_type: started
+    # Message that depends on status of pipeline
+    - put: slac-notify
+      on_success:
+        put: slac-notify
+        params:
+          alert_type: success
+      on_failure:
+        put: slac-notify
+        params:
+          alert_type: failed
+      on_abort:
+        put: slac-notify
+        params:
+          alert_type: aborted
+      on_error:
+        put: slac-notify
+        params:
+          alert_type: errored

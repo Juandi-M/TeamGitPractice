@@ -1,0 +1,17 @@
+resources:
+- name: Pipeline_git_repo
+  type: git
+  icon: github
+  source:
+    uri: git@github.com:Juandi-M/TeamGitPractice.git
+    branch: master
+    private_key: {{private_key:}}
+
+jobs:
+- name: clone-git-pipeline
+  public: true
+  plan:
+    - get: Pipeline_git_repo
+      trigger: true
+    - set_pipeline: hello-world
+      file: concourse-examples/pipelines/hello-world.yml

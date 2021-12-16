@@ -13,5 +13,4 @@ jobs:
   plan:
     - get: Pipeline_git_repo
       trigger: true
-    - set_pipeline: hello-world
-      file: concourse-examples/pipelines/hello-world.yml
+    
